@@ -1,0 +1,46 @@
+services:
+  pgstac:
+    image: ghcr.io/stac-utils/pgstac:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+    ports:
+      - "5439:5432"
+    volumes:
+      - pgstac-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  stac-fastapi:
+    image: ghcr.io/stac-utils/stac-fastapi-pgstac:latest
+    environment:
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+      PGHOST: pgstac
+      PGPORT: 5432
+      APP_HOST: ${APP_HOST}
+      APP_PORT: ${APP_PORT}
+      ENVIRONMENT: ${ENVIRONMENT}
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY}
+      RELOAD: ${RELOAD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      pgstac:
+        condition: service_healthy
+
+  titiler:
+    image: ghcr.io/developmentseed/titiler:latest
+    ports:
+      - "8000:80"
+
+volumes:
+  pgstac-data:
