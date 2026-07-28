@@ -51,11 +51,26 @@ curl http://localhost:8080/search
 ```
 
 Note: asset hrefs use the docker-network-internal `http://minio:9000/...`
-address, resolvable by stac-fastapi/titiler but not from the host browser.
-Revisit when the frontend (M2) needs direct browser access.
+address. This is fine for COG preview, since the browser only ever talks
+to titiler (which resolves `minio` itself); it'll need revisiting for M3
+when the browser fetches PMTiles/GeoParquet directly.
+
+## Frontend (M2)
+
+React + Vite + MapLibre GL + TanStack Query. Catalog browse (collections →
+items) with a map; selecting an item with a COG asset renders it live via
+titiler.
+
+```bash
+cd web
+cp .env.example .env
+npm install
+npm run dev
+```
+
+Open http://localhost:5173.
 
 ## Status
 
-M1 done — 3 sample collections/items seeded and searchable, titiler renders
-the sample COG from MinIO. No frontend or admin yet. See design doc
-milestones.
+M2 done — frontend browses collections/items and renders the sample COG
+raster on the map via titiler. No admin yet. See design doc milestones.

@@ -2,3 +2,4 @@
 data/.venv/
 data/_ndjson/
 __pycache__/
+/tmp/
