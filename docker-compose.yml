@@ -75,6 +75,15 @@ services:
       mc anonymous set download local/$$MINIO_BUCKET
       "
 
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_STAC_API_URL: ${VITE_STAC_API_URL}
+        VITE_TITILER_URL: ${VITE_TITILER_URL}
+    ports:
+      - "${WEB_PORT}:80"
+
 volumes:
   pgstac-data:
   minio-data:

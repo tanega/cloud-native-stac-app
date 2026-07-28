@@ -14,6 +14,7 @@ cp .env.example .env
 docker compose up -d
 ```
 
+- Web app: http://localhost:5173
 - STAC API: http://localhost:8080
 - titiler: http://localhost:8000 (docs at `/api.html`)
 - pgstac (Postgres): localhost:5439
@@ -61,14 +62,18 @@ React + Vite + MapLibre GL + TanStack Query. Catalog browse (collections →
 items) with a map; selecting an item with a COG asset renders it live via
 titiler.
 
+Runs as part of the main stack (`docker compose up -d`, built from
+`web/Dockerfile`, a multi-stage build → static files served by nginx) —
+open http://localhost:5173.
+
+For frontend-only iteration with hot reload, run it directly instead:
+
 ```bash
 cd web
 cp .env.example .env
 npm install
 npm run dev
 ```
-
-Open http://localhost:5173.
 
 ## Status
 
